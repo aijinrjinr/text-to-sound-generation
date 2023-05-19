@@ -1,0 +1,84 @@
+model:
+  target: sound_synthesis.modeling.models.dalle_spec.DALLE
+  params:
+    content_info: {key: image}
+    condition_info: {key: text}
+    content_codec_config: 
+      target: sound_synthesis.modeling.codecs.spec_codec.vqgan.VQModel
+      params:
+        ckpt_path: '/data/wei/audiocaps/trained_model/VQ-VAE/VQ-VAE_trained_on_audioset_256.ckpt' # e.g. '2021-06-06T19-42-53_vas_specs_vqgan' or '2021-05-19T22-16-54_vggsound_specs_vqgan'
+        embed_dim: 256
+        n_embed: 256 # codebook 的大小，若使用vggsound训练的codebook,则应该为1024
+        ddconfig:
+          double_z: false
+          z_channels: 256
+          resolution: 848 # we need not to crop
+          in_channels: 1
+          out_ch: 1
+          ch: 128
+          ch_mult: [1, 1, 2, 2, 4]
+          num_res_blocks: 2
+          attn_resolutions: [53]
+          dropout: 0.0
+        lossconfig:
+          target: specvqgan.modules.losses.DummyLoss
+    first_stage_permuter_config:
+      target: specvqgan.modules.transformer.permuter.ColumnMajor
+      params:
+        H: 5  # mel_num, num of feats in specs / down_factor
+        W: 53  # cropped spec length / down_factor
+    condition_codec_config:
+      target: sound_synthesis.modeling.codecs.text_codec.tokenize.Tokenize
+      params:
+       context_length: 77     ############# 77 for clip and 256 for dalle
+       add_start_and_end: True
+       with_mask: True
+       pad_value: 0 # 0 for clip embedding and -100 for others
+       clip_embedding: False     ############################   if we use clip embedding 
+       tokenizer_config:
+        target: sound_synthesis.modeling.modules.clip.simple_tokenizer.SimpleTokenizer   #########
+        params:
+          end_idx: 49152                              ###################
+    diffusion_config:      
+      target: sound_synthesis.modeling.transformers.diffusion_transformer.DiffusionTransformer
+      params:
+        diffusion_step: 100
+        alpha_init_type: 'alpha1'       # init_type = fix or cos or linear 
+        auxiliary_loss_weight: 5.0e-4
+        adaptive_auxiliary_loss: True
+        mask_weight: [1, 1]    # the loss weight on mask region and non-mask region
+
+        transformer_config:
+          target: sound_synthesis.modeling.transformers.transformer_utils.Text2ImageTransformer
+          params:
+            attn_type: 'selfcross'
+            n_layer: 19
+            condition_seq_len: 77    ###### 77 for clip and 256 for dalle
+            content_seq_len: 265  # 5 x 53
+            content_spatial_size: [5, 53]
+            n_embd: 1024 # the dim of embedding dims
+            condition_dim: 512
+            n_head: 16 
+            attn_pdrop: 0.0
+            resid_pdrop: 0.0
+            block_activate: GELU2
+            timestep_type: 'adalayernorm'    # adainsnorm or adalayernorm and abs
+            mlp_hidden_times: 4
+        condition_emb_config:
+          target: sound_synthesis.modeling.embeddings.clip_text_embedding.CLIPTextEmbedding
+          params:
+            clip_name: 'ViT-B/32'
+            num_embed: 49408 # 49152+256
+            normalize: True
+            pick_last_embedding: False   # if True same as clip but we need embedding of each word
+            keep_seq_len_dim: False
+            additional_last_embedding: False
+            embed_dim: 512
+        content_emb_config:
+          target: sound_synthesis.modeling.embeddings.dalle_mask_image_embedding.DalleMaskImageEmbedding
+          params:
+            num_embed: 256    #should be quantize_number
+            spatial_size: !!python/tuple [5, 53]
+            embed_dim: 1024 # the dim of postion embedding
+            trainable: True
+            pos_emb_type: embedding
