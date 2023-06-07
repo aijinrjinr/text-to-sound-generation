@@ -23,12 +23,12 @@ python train.py \
 --freeze_text_encoder --augment --snr_gamma 5 \
 ```
 
-To run inference on the AudioCaps datase with **Diffsound**, using
+To run inference on the AudioCaps dataset with **Diffsound**, using
 ```bash
 cd Diffsound
 python evaluation/generate_samples_batch.py
 ```
-To run inference on the AudioCaps datase with **TANGO**, using
+To run inference on the AudioCaps dataset with **TANGO**, using
 ```bash
 python inference.py \
 --original_args="saved/*/summary.jsonl" \
