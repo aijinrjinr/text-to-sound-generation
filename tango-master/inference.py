@@ -81,14 +81,12 @@ def main():
     args.num_samples = 1
     args.num_steps = 200
     args.batch_size = 6
-    args.cut = 0
+ 
     args.device = 'cuda:3'
-    args.test_references = '/home/qywei/TTSS/audiocaps/test/'
-    args.original_args = '/home/qywei/tango/saved/1685936659/summary.jsonl'
-    args.model = r'/home/qywei/tango/saved/1685936659/best/pytorch_model_2.bin'
-    # inference.py - - = "saved/1681728144/summary.jsonl" \
-    #                                 - -model = "saved/1681728144/epoch_39/pytorch_model_2.bin" - -num_steps
-
+    args.test_references = '/home/TTSS/audiocaps/test/'
+    args.original_args = '/home/tango/saved/1685936659/summary.jsonl'
+    args.model = r'/home/tango/saved/1685936659/best/pytorch_model_2.bin'
+    
     train_args = dotdict(json.loads(open(args.original_args).readlines()[0]))
     if "hf_model" not in train_args:
         train_args["hf_model"] = None
@@ -151,14 +149,7 @@ def main():
     # text_prompts = [prefix + inp for inp in text_prompts]
     text_prompts = list(pd.read_csv('/home/qywei/TTSS/audiocaps/test.csv').values[:, -1])
     text_id = list(pd.read_csv('/home/qywei/TTSS/audiocaps/test.csv').values[:, 0])
-    T = len(text_prompts)
-    cutT = T // 2
-    if args.cut < 1:
-        text_prompts = text_prompts[args.cut*cutT:args.cut*cutT + cutT]
-        text_id = text_id[args.cut*cutT:args.cut*cutT + cutT]
-    else:
-        text_prompts = text_prompts[cutT*1:]
-        text_id = text_id[cutT*1:]
+  
 
     if args.num_test_instances != - 1:
         text_prompts = text_prompts[:args.num_test_instances]
