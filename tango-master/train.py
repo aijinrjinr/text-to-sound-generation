@@ -232,7 +232,7 @@ class Text2AudioDataset(Dataset):
 def main():
     args = parse_args()
     accelerator_log_kwargs = {}
-    args.text_encoder_name = 'stabilityai/stable-diffusion-2-1'#"google/flan-t5-large"
+    #args.text_encoder_name = 'stabilityai/stable-diffusion-2-1'#"google/flan-t5-large"
     args.scheduler_name = "stabilityai/stable-diffusion-2-1"
     args.unet_model_config = "configs/diffusion_model_config.json"
     args.freeze_text_encoder = True
@@ -241,9 +241,9 @@ def main():
     args.snr_gamma = 5
     args.device = 'cuda:0'
     args.per_device_train_batch_size = 1
-    args.train_file = '/home/qywei/tango/data/train_audiocaps_new.json'
-    args.validation_file = '/home/qywei/tango/data/valid_audiocaps_new.json'
-    args.test_file = '/home/qywei/tango/data/test_audiocaps_new.json'
+    args.train_file = '/home/tango/data/train_audiocaps_new.json'
+    args.validation_file = '/home/tango/data/valid_audiocaps_new.json'
+    args.test_file = '/home/tango/data/test_audiocaps_new.json'
     if args.with_tracking:
         accelerator_log_kwargs["log_with"] = args.report_to
         accelerator_log_kwargs["logging_dir"] = args.output_dir
