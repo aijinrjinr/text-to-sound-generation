@@ -64,13 +64,10 @@ class Tango:
             return list(self.chunks(outputs, samples))
 
 # import IPython
-import soundfile as sf
-tango = Tango("declare-lab/tango-full-ft-audiocaps")
-# prompt = "A dog is barking under water"
-prompt = "A dog is singing"
-audio = tango.generate(prompt)
-sf.write("/home/qywei/tango/outputs/test1.wav", audio, samplerate=16000)
+# import soundfile as sf
+# tango = Tango("declare-lab/tango-full-ft-audiocaps")
+# # prompt = "A dog is barking under water"
+# prompt = "A dog is singing"
+# audio = tango.generate(prompt)
+# sf.write("/home/qywei/tango/outputs/test1.wav", audio, samplerate=16000)
 
-a = 1
-# IPython.display.Audio(data=audio, rate=16000)
-# a = 1
