@@ -84,8 +84,8 @@ def main():
  
     args.device = 'cuda:3'
     args.test_references = '/home/TTSS/audiocaps/test/'
-    args.original_args = '/home/tango/saved/1685936659/summary.jsonl'
-    args.model = r'/home/tango/saved/1685936659/best/pytorch_model_2.bin'
+#     args.original_args = '/home/tango/saved/1685936659/summary.jsonl'
+#     args.model = r'/home/tango/saved/1685936659/best/pytorch_model_2.bin'
     
     train_args = dotdict(json.loads(open(args.original_args).readlines()[0]))
     if "hf_model" not in train_args:
