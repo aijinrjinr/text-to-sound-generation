@@ -35,6 +35,7 @@ python evaluation/generate_samples_batch.py
 ```
 To run inference on the AudioCaps dataset with **TANGO**, using
 ```bash
+cd tango-master
 python inference.py \
 --original_args="saved/*/summary.jsonl" \
 --model="saved/*/best/pytorch_model_2.bin" \
