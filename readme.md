@@ -1,6 +1,11 @@
 # CS230 Final Project: Text-to-sound Generation Using Diffusion Model
 Our code is mainly developed based on **TANGO** (https://github.com/declare-lab/tango) and **Diffsound** (https://github.com/yangdongchao/Text-to-sound-Synthesis).
 
+To download AudioCaps dataset, using (code is from https://github.com/MorenoLaQuatra/audiocaps-download)
+```bash
+python download_data.py
+```
+
 To train **TANGO** with FLAN-T5 on the AudioCaps dataset, using
 
 ```bash
